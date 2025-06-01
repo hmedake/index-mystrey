@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مستري تاون - تقديم إدارة</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000000;
+            margin: 0;
+            padding: 0;
+            color: #e0e0e0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.3);
+            border: 1px solid #8a2be2;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        header h1 {
+            color: #b57aff;
+            margin-bottom: 5px;
+            text-shadow: 0 0 5px rgba(181, 122, 255, 0.5);
+        }
+        header p {
+            color: #aaa;
+            margin-top: 0;
+        }
+        .form-section {
+            margin-bottom: 20px;
+        }
+        .form-section h2 {
+            color: #b57aff;
+            border-bottom: 2px solid #8a2be2;
+            padding-bottom: 5px;
+            text-shadow: 0 0 3px rgba(181, 122, 255, 0.3);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #b57aff;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            background-color: #2a2a2a;
+            border: 1px solid #8a2be2;
+            border-radius: 5px;
+            font-size: 16px;
+            color: #e0e0e0;
+        }
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        .form-group input::placeholder {
+            color: #777;
+        }
+        .submit-btn {
+            background-color: #8a2be2;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto;
+            transition: all 0.3s;
+            box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+        }
+        .submit-btn:hover {
+            background-color: #9c4dff;
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(156, 77, 255, 0.7);
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 14px;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            color: #b57aff;
+            margin: 10px 0;
+        }
+        .success-message {
+            display: none;
+            text-align: center;
+            color: #4CAF50;
+            margin: 10px 0;
+        }
+        .error-message {
+            display: none;
+            text-align: center;
+            color: #f44336;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>مستري تاون - تقديم إدارة</h1>
+            <p>http://localhost:8080/mystrey.html</p>
+        </header>
+
+        <div class="form-section">
+            <h2>نموذج التقديم للإدارة</h2>
+            <form id="applicationForm">
+                <div class="form-group">
+                    <label for="fullname">الاسم الكامل</label>
+                    <input type="text" id="fullname" name="fullname" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="age">العمر</label>
+                    <input type="number" id="age" name="age" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="username">اسم المستخدم (User)</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="discord">آيدي الديسكورد (ID)</label>
+                    <input type="text" id="discord" name="discord" placeholder="مثال: 123456789012345678" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="experience">الخبرة السابقة</label>
+                    <textarea id="experience" name="experience" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="reason">لماذا تريد الانضمام إلى فريق إدارة مستري تاون؟</label>
+                    <textarea id="reason" name="reason" required></textarea>
+                </div>
+
+                <div class="loading" id="loadingIndicator">
+                    جاري إرسال الطلب...
+                </div>
+
+                <div class="success-message" id="successMessage">
+                    تم إرسال طلبك بنجاح! سيتم مراجعته قريباً.
+                </div>
+
+                <div class="error-message" id="errorMessage">
+                    حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى لاحقاً.
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">تقديم الطلب</button>
+            </form>
+        </div>
+
+        <footer>
+            جميع الحقوق محفوظة © 2025 مستري تاون
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('applicationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // إخفاء الرسائل السابقة
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            // عرض مؤشر التحميل
+            submitBtn.disabled = true;
+            loadingIndicator.style.display = 'block';
+            
+            // جمع بيانات النموذج
+            const formData = {
+                fullname: document.getElementById('fullname').value,
+                age: document.getElementById('age').value,
+                username: document.getElementById('username').value,
+                discord: document.getElementById('discord').value,
+                experience: document.getElementById('experience').value,
+                reason: document.getElementById('reason').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            // استبدل هذا الرابط برابط ويب هوك الخاص بك على Discord
+            const webhookURL = 'https://canary.discord.com/api/webhooks/1377657627684765766/MlkHSDonIp2fjNM4c-59f2BsdQXvkltsP3hlpxe_rgRYQy4VxhVzLY9DZmEC9VYvUu0V';
+            
+            // إنشاء محتوى الرسالة لـ Discord
+            const discordMessage = {
+                username: "نظام تقديم طلبات الإدارة",
+                avatar_url: "",
+                embeds: [{
+                    title: "طلب انضمام جديد لفريق الإدارة",
+                    color: 0x8a2be2, // لون بنفسجي
+                    fields: [
+                        { name: "الاسم الكامل", value: formData.fullname },
+                        { name: "العمر", value: formData.age },
+                        { name: "اسم المستخدم", value: formData.username },
+                        { name: "آيدي الديسكورد", value: formData.discord },
+                        { name: "الخبرة السابقة", value: formData.experience.substring(0, 1000) + (formData.experience.length > 1000 ? "..." : "") },
+                        { name: "سبب الانضمام", value: formData.reason.substring(0, 1000) + (formData.reason.length > 1000 ? "..." : "") },
+                        { name: "وقت التقديم", value: new Date(formData.timestamp).toLocaleString() }
+                    ],
+                    footer: { text: "مستري تاون - نظام الإدارة" }
+                }]
+            };
+            
+            // إرسال البيانات إلى ويب هوك Discord
+            fetch(webhookURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(discordMessage),
+            })
+            .then(response => {
+                if (response.ok) {
+                    // نجاح الإرسال
+                    successMessage.style.display = 'block';
+                    document.getElementById('applicationForm').reset();
+                } else {
+                    throw new Error('Failed to send');
+                }
+            })
+            .catch(error => {
+                // فشل الإرسال
+                console.error('Error:', error);
+                errorMessage.style.display = 'block';
+            })
+            .finally(() => {
+                loadingIndicator.style.display = 'none';
+                submitBtn.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
